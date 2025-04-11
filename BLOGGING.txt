@@ -1,0 +1,263 @@
+BLOGGING
+---------
+
+mkdir blogging-system && cd blogging-system
+mkdir backend frontend
+cd backend
+npm init -y
+npm install express pg pg-hstore sequelize bcryptjs jsonwebtoken cors dotenv
+
+Express (express):
+This is a fast, minimalist web framework for Node.js. It provides the fundamental structure for building web applications and APIs, handling routing, middleware, and HTTP requests.
+
+pg and pg-hstore (pg, pg-hstore):
+pg is a Node.js client for PostgreSQL, allowing your application to connect to and interact with a PostgreSQL database.
+pg-hstore allows for the use of the hstore data type within postgres, which is used for storing key/value pairs within a single postgres field.
+
+Sequelize (sequelize):
+This is a promise-based Object-Relational Mapper (ORM) for Node.js. It simplifies database interactions by allowing you to work with database tables as JavaScript objects. It supports PostgreSQL, MySQL, SQLite, and MariaDB.
+
+bcryptjs (bcryptjs):
+This library is used for hashing passwords. It's crucial for securely storing user passwords in a database. Hashing transforms passwords into irreversible strings, protecting them from being exposed in case of a data breach.
+
+jsonwebtoken (jsonwebtoken):
+This package is used for creating and verifying JSON Web Tokens (JWTs). JWTs are commonly used for authentication and authorization, allowing you to securely transmit information between parties.
+
+cors (cors):
+CORS (Cross-Origin Resource Sharing) is a mechanism that allows or restricts requests from different origins (domains, protocols, or ports). The cors package provides middleware to handle CORS, enabling your API to accept requests from specific origins.
+
+dotenv (dotenv):
+This package loads environment variables from a .env file into process.env. This is useful for storing sensitive information like database credentials or API keys outside of your codebase.
+
+
+
+
+
+
+
+npm install --save-dev nodemon
+
+
+nodemon is a very useful tool for Node.js development. Specifically, npm install --save-dev nodemon is used to install nodemon as a development dependency. Here's what it does:
+
+Automatic Restarting:
+The core function of nodemon is to monitor your Node.js application files. When it detects changes to those files, it automatically restarts your application. This eliminates the need to manually stop and restart your server every time you make a code modification.
+
+Development Tool:
+Installing it with --save-dev means it's primarily intended for use during development. This is because you typically don't need automatic restarts in a production environment.
+
+Increased Efficiency:
+By automating server restarts, nodemon significantly speeds up the development process, allowing you to focus on coding and testing without interruptions.
+In simpler terms, it makes it so that when you save your code, your server automatically updates to reflect those changes.
+
+
+
+
+
+
+cd backend
+npm install mysql2
+
+
+
+npx sequelize-cli init  -> This will create a config folder with a config.json file and a models, migrations, and seeders folder inside backend/.
+
+
+
+Open backend/config/config.json and update the development section with your PostgreSQL credentials:
+
+"development": {
+    "username": "root",
+    "password": "admin",
+    "database": "blogdb",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+
+Run these commands inside backend/:
+
+npx sequelize-cli model:generate --name User --attributes username:string,email:string,password:string
+npx sequelize-cli model:generate --name Post --attributes title:string,content:text,userId:integer
+
+
+
+Run Migrations to Create Tables in PostgreSQL:
+
+npx sequelize-cli db:migrate
+
+
+
+In MySQL Database:
+
+CREATE DATABASE blogdb;
+SHOW DATABASES;
+
+
+Back to backend : npx sequelize-cli db:migrate
+
+
+Create a User Seeder:
+npx sequelize-cli seed:generate --name demo-user
+
+
+
+Open seeders/{timestamp}-demo-user.js and add:
+
+module.exports = {
+  async up(queryInterface) {
+    return queryInterface.bulkInsert("Users", [
+      {
+        username: "testuser",
+        email: "test@example.com",
+        password: "password123", // Hash password in real projects
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]);
+  },
+
+  async down(queryInterface) {
+    return queryInterface.bulkDelete("Users", null, {});
+  },
+};
+
+
+RUN -> npx sequelize-cli db:seed:all
+
+create routes folder and add userRoutes.js and postRoutes.js
+
+create server.js too
+
+
+
+
+FrontEND
+---------
+npm create vite@latest frontend --template react
+cd frontend
+npm install
+npm run dev
+
+
+
+First, let's set up your project structure. Inside your frontend/src/ folder, create these directories:
+
+📂 components → Reusable UI components (e.g., Navbar, Button)
+📂 pages → Different screens (e.g., Home, Login, Signup, Dashboard)
+📂 services → API calls using Axios
+📂 context → Global state management (if needed)
+📂 assets → Images, icons, styles
+
+
+
+npm install axios react-router-dom
+
+main.jsx
+---------
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import App from "./App";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Home from "./pages/Home";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+      </Routes>
+    </Router>
+  </React.StrictMode>
+);
+
+
+IN Pages ->  created Login.jsx Signup.jsx
+
+
+
+
+
+
+
+📂 Backend Authentication Files
+These files handle user authentication and token verification in your Express.js + PostgreSQL backend.
+
+1️⃣ /backend/middleware/authMiddleware.js
+🔹 Purpose:
+
+Checks if the user is authenticated before allowing access to protected routes.
+
+Extracts the JWT token from the request header, verifies it, and attaches user data to req.user.
+
+🔹 How It Works:
+
+If no token is found, it returns "Unauthorized" (401).
+
+If the token is valid, it extracts the user ID and checks if the user exists in the database.
+
+If the user exists, the request continues to the next function (next()).
+
+Otherwise, it returns "User not found" (404) or "Invalid token" (401).
+
+🔹 When is it Used?
+✅ Protects routes like /me (user profile) to ensure only logged-in users can access them.
+
+2️⃣ /backend/routes/authRoutes.js
+🔹 Purpose:
+
+Handles user registration (/signup) and login (/login) requests.
+
+Generates JWT tokens on successful login/signup.
+
+Provides a protected route (/me) to get user info if authenticated.
+
+🔹 How It Works:
+
+/signup:
+
+Hashes the password and stores the user in the database.
+
+Generates a JWT token for the user.
+
+/login:
+
+Checks if the email exists and verifies the password.
+
+If correct, generates a JWT token and sends it back.
+
+/me:
+
+Uses authMiddleware to check if the request has a valid JWT token.
+
+If authenticated, returns the user's profile data.
+
+🔹 When is it Used?
+✅ When users sign up, log in, or access their profile.
+
+📂 Frontend Authentication Files
+These files handle user authentication state and API calls in your React frontend.
+
+3️⃣ /frontend/src/context/AuthContext.jsx
+🔹 Purpose:
+
+Manages user login, signup, and logout state.
+
+Stores the JWT token in localStorage and includes it in requests.
+
+Provides authentication functions (login, signup, logout) across the app.
+
+🔹 How It Works:
+
+When a user logs in or signs up, the token is stored in localStorage and the user data is set in state.
+
+On logout, it removes the token and clears the user state.
+
+On page load, it checks if a token exists and tries to fetch the user from /me.
+
+🔹 When is it Used?
+✅ Provides authentication state for all React components using useContext(AuthContext).

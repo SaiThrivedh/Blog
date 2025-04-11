@@ -1,0 +1,147 @@
+/* Wrapper */
+.dashboard-wrapper {
+  padding: 2rem;
+  background: #ffffff;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #000;
+}
+
+/* Header */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h2 {
+  font-size: 1.8rem;
+  color: #000;
+}
+
+/* Logout */
+.logout-button {
+  background-color: #e60023;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.logout-button:hover {
+  background-color: #b8001a;
+}
+
+/* Controls */
+.dashboard-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.search-bar {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  font-size: 1rem;
+  border-radius: 0;
+  background-color: transparent;
+  color: #000;
+  transition: border-color 0.3s ease;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: #0056d2;
+}
+
+/* Create button */
+.create-button {
+  background-color: #0056d2;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.2rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.create-button:hover {
+  background-color: #0047b0;
+  transform: translateY(-1px);
+}
+
+/* Blog list */
+.blog-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Blog card */
+.blog-card {
+  background: #fff;
+  padding: 1.2rem 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.blog-card h3 {
+  color: #000;
+  font-size: 1.3rem;
+  margin-bottom: 0.4rem;
+}
+
+.blog-card p {
+  color: #333;
+  margin: 0.5rem 0;
+}
+
+.blog-card button {
+  background-color: #0056d2;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.blog-card button:hover {
+  background-color: #0047b0;
+  transform: translateY(-1px);
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .dashboard-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .create-button {
+    width: 100%;
+  }
+
+  .search-bar {
+    width: 100%;
+  }
+}
