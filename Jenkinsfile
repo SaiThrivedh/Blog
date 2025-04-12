@@ -5,7 +5,7 @@ pipeline {
         stage('Clone Repo') {
             steps {
                 echo 'Cloning repository...'
-                git 'https://github.com/SaiThrivedh/Blog.git'
+                git 'https://github.com/SaiThrivedh/Blog.git' branch 'main'
             }
         }
 
