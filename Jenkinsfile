@@ -1,70 +1,57 @@
 pipeline {
-  agent any
+    agent any
 
-  environment {
-    NODE_ENV = 'production'
-  }
+    stages {
+        stage('Clone Repo') {
+            steps {
+                echo 'Cloning repository...'
+                git 'https://github.com/SaiThrivedh/Blog.git'
+            }
+        }
 
-  tools {
-    nodejs 'NodeJS 18'
-  }
+        stage('Install Frontend Dependencies') {
+            steps {
+                dir('frontend') {
+                    echo 'Installing frontend dependencies...'
+                    bat 'npm install'
+                }
+            }
+        }
 
-  stages {
-    stage('Clone Repo') {
-      steps {
-        echo 'Cloning repository...'
-        git url: 'https://github.com/SaiThrivedh/Blog.git', branch: 'main'
-      }
+        stage('Build Frontend') {
+            steps {
+                dir('frontend') {
+                    echo 'Building frontend...'
+                    bat 'npm run build'
+                }
+            }
+        }
+
+        stage('Install Backend Dependencies') {
+            steps {
+                dir('backend') {
+                    echo 'Installing backend dependencies...'
+                    bat 'npm install'
+                }
+            }
+        }
+
+        stage('Run Backend Lint/Test (optional)') {
+            steps {
+                dir('backend') {
+                    echo 'Running backend tests...'
+                    bat 'npm test' // or `npm run lint`, if defined
+                }
+            }
+        }
     }
 
-    stage('Install Dependencies') {
-      steps {
-        echo 'Installing dependencies...'
-        bat 'npm install'
-      }
+    post {
+        always {
+            echo 'Pipeline completed.'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
     }
-
-    stage('Build') {
-      steps {
-        echo 'Running build script (if exists)...'
-        bat 'npm run build || echo "No build script defined"'
-      }
-    }
-
-    stage('Lint') {
-      steps {
-        echo 'Running linter (if exists)...'
-        bat 'npm run lint || echo "No lint script defined"'
-      }
-    }
-
-    stage('Test') {
-      steps {
-        echo 'Running tests (if exists)...'
-        bat 'npm test || echo "No test script defined"'
-      }
-    }
-
-    stage('Archive Artifacts') {
-      when {
-        expression { fileExists('build') }
-      }
-      steps {
-        echo 'Archiving build artifacts...'
-        archiveArtifacts artifacts: 'build/**/*', allowEmptyArchive: true
-      }
-    }
-  }
-
-  post {
-    always {
-      echo 'Pipeline completed.'
-    }
-    success {
-      echo 'Pipeline succeeded!'
-    }
-    failure {
-      echo 'Pipeline failed!'
-    }
-  }
 }
