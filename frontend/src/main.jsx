@@ -10,6 +10,7 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import CreateBlog from "./pages/CreateBlog";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import Profile from "./pages/Profile"
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -21,6 +22,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/signup" element={<Signup />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/createblog" element={ <ProtectedRoute><CreateBlog /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         </Routes>
       </AuthProvider>
     </Router>

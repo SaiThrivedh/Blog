@@ -24,7 +24,9 @@ export default function Home() {
   <p>
     Create, share, and shine through your blogs. Whether it's projects, journals, or ideas — iBlog is your digital portfolio.
   </p>
+  <Link to="/signup">
   <button className="cta-btn">Get Started</button>
+</Link>
 </div>
 
 

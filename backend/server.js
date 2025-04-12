@@ -23,11 +23,13 @@ const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
 const authRoutes = require("./routes/authRoutes");
 const blogRoutes = require("./routes/blogRoutes");
+//const profileRoutes = require("./routes/profileRoute");
 
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 app.use("/auth", authRoutes);
 app.use("/blogs", blogRoutes);
+//app.use("/profile", profileRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;

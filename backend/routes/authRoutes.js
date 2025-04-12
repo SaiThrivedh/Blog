@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
+const { Blog } = require("../models");
 const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
@@ -81,6 +82,26 @@ router.get("/me", authMiddleware, async (req, res) => {
     res.json(user);
   } catch (err) {
     res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get("/profile", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: ["id", "username", "email"],
+      include: {
+        model: Blog,
+        as: "blogs",
+        attributes: ["id", "title", "createdAt", "updatedAt"],
+      },
+    });
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json(user);
+  } catch (err) {
+    console.error("Error fetching profile:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
