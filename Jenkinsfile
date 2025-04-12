@@ -3,43 +3,44 @@ pipeline {
 
   environment {
     NODE_ENV = 'production'
-    // Add any environment variables you need
   }
 
   tools {
-    nodejs 'NodeJS 18' // Make sure this matches your Jenkins tool config name
+    nodejs 'NodeJS 18'
   }
 
   stages {
     stage('Clone Repo') {
       steps {
+        echo 'Cloning repository...'
         git url: 'https://github.com/SaiThrivedh/Blog.git', branch: 'main'
       }
     }
 
     stage('Install Dependencies') {
       steps {
+        echo 'Installing dependencies...'
         sh 'npm install'
       }
     }
 
     stage('Build') {
       steps {
-        echo 'Running build script...'
+        echo 'Running build script (if exists)...'
         sh 'npm run build || echo "No build script defined"'
       }
     }
 
     stage('Lint') {
       steps {
-        echo 'Running linter...'
+        echo 'Running linter (if exists)...'
         sh 'npm run lint || echo "No lint script defined"'
       }
     }
 
     stage('Test') {
       steps {
-        echo 'Running tests...'
+        echo 'Running tests (if exists)...'
         sh 'npm test || echo "No test script defined"'
       }
     }
@@ -49,16 +50,10 @@ pipeline {
         expression { fileExists('build') }
       }
       steps {
+        echo 'Archiving build artifacts...'
         archiveArtifacts artifacts: 'build/**/*', allowEmptyArchive: true
       }
     }
-
-    // Optional: Add deploy stage later if needed
-    // stage('Deploy') {
-    //   steps {
-    //     echo 'Deploy step goes here'
-    //   }
-    // }
   }
 
   post {
