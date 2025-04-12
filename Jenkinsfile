@@ -20,28 +20,28 @@ pipeline {
     stage('Install Dependencies') {
       steps {
         echo 'Installing dependencies...'
-        sh 'npm install'
+        bat 'npm install'
       }
     }
 
     stage('Build') {
       steps {
         echo 'Running build script (if exists)...'
-        sh 'npm run build || echo "No build script defined"'
+        bat 'npm run build || echo "No build script defined"'
       }
     }
 
     stage('Lint') {
       steps {
         echo 'Running linter (if exists)...'
-        sh 'npm run lint || echo "No lint script defined"'
+        bat 'npm run lint || echo "No lint script defined"'
       }
     }
 
     stage('Test') {
       steps {
         echo 'Running tests (if exists)...'
-        sh 'npm test || echo "No test script defined"'
+        bat 'npm test || echo "No test script defined"'
       }
     }
 
