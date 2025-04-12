@@ -3,10 +3,11 @@ pipeline {
 
   stages {
     stage('Clone Repo') {
-      steps {
-        git url: 'https://github.com/SaiThrivedh/Blog.git'
-      }
-    }
+  steps {
+    git url: 'https://github.com/SaiThrivedh/Blog.git', branch: 'main'
+  }
+}
+
 
     stage('Install Dependencies') {
       steps {
